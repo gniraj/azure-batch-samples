@@ -597,6 +597,7 @@
                             </Button>
                         </StackPanel>
                         <DataGrid
+                            x:Name="JobDataGrid"
                             Grid.Row="1"
                             ItemsSource="{Binding JobSchedules}"
                             SelectedItem="{Binding SelectedJobSchedule}">
@@ -678,9 +679,10 @@
                             </Button>
                         </StackPanel>
                         <DataGrid
+                            x:Name="DataGrid"
                             Grid.Row="1"
                             ItemsSource="{Binding Jobs}"
-                            SelectedItem="{Binding SelectedJob}">
+                            SelectedItem="{Binding SelectedJob}" Loaded="AddItem">
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem 

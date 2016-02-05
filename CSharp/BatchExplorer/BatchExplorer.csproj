@@ -233,6 +233,8 @@
     <Compile Include="PluginInterfaces\AccountPlugin\IAccountEditor.cs" />
     <Compile Include="PluginInterfaces\AccountPlugin\IAccountManagerMetadata.cs" />
     <Compile Include="PluginInterfaces\AccountPlugin\IAccountOperationFactory.cs" />
+    <Compile Include="PluginInterfaces\JobProperties\IJobPropertiesExtensionMetadata.cs" />
+    <Compile Include="PluginInterfaces\JobProperties\IJobPropertiesExtension.cs" />
     <Compile Include="Plugins\AccountPlugin\DefaultAccountManager.cs" />
     <Compile Include="Models\AddTaskOptions.cs" />
     <Compile Include="Models\AsyncOperationModel.cs" />

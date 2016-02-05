@@ -89,12 +89,15 @@ namespace Microsoft.Azure.BatchExplorer.Helpers
         public static void LoadPlugins(object pluginTarget)
         {
             AggregateCatalog catalog = new AggregateCatalog(new AssemblyCatalog(typeof(MainViewModel).Assembly));
+            AggregateCatalog catalog2 = new AggregateCatalog();
 
             if (!Directory.Exists(Common.PluginSubfolderName))
             {
                 Directory.CreateDirectory(Common.PluginSubfolderName);
             }
             string[] subDirectories = Directory.GetDirectories(Common.PluginSubfolderName);
+            catalog.Catalogs.Add(new DirectoryCatalog(Common.PluginSubfolderName));
+            catalog2.Catalogs.Add(new DirectoryCatalog(Common.PluginSubfolderName));
 
             foreach (string subDirectory in subDirectories)
             {
@@ -102,9 +105,10 @@ namespace Microsoft.Azure.BatchExplorer.Helpers
             }
             
             CompositionContainer container = new CompositionContainer(catalog);
-
+            CompositionContainer container2 = new CompositionContainer(catalog2);
             try
             {
+                container2.ComposeParts(pluginTarget);
                 container.ComposeParts(pluginTarget);
             }
             catch (ReflectionTypeLoadException e)

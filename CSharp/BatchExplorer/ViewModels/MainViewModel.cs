@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -30,6 +31,10 @@ namespace Microsoft.Azure.BatchExplorer.ViewModels
         /// </summary>
         [ImportMany(typeof(IAccountManager))] 
         private IEnumerable<Lazy<IAccountManager, IAccountManagerMetadata>> ManagerCollection { get; set; }
+
+        [ImportMany(typeof (IJobPropertiesExtension))]
+        public IEnumerable<Lazy<IJobPropertiesExtension, IJobPropertiesExtensionMetadata>> JobPropertiesExtensions {
+            get; set; }
 
         public List<AccountManagerContainer> AccountManagers { get; private set; }
         
@@ -419,6 +424,14 @@ namespace Microsoft.Azure.BatchExplorer.ViewModels
                 return this.ActiveAccount != null;
             }
         }
+
+        private bool showExtensions;
+
+        public bool ShowExtensions
+        {
+            get { return showExtensions; }
+            set { showExtensions = value; }
+        }
         
         #endregion
 
@@ -516,7 +529,10 @@ namespace Microsoft.Azure.BatchExplorer.ViewModels
                 manager.Value.InitalizeAsync().Wait(); //TODO: Do this elsewhere and use the async method?
                 this.AccountManagers.Add(new AccountManagerContainer(manager.Value, manager.Metadata));
             }
-            
+
+            //TODO: make it async
+            CheckIfJobPropertiesExtensionsArePresent(this.JobPropertiesExtensions);
+
             JobTabIsSelected = true;
             
             //Register for async operation updates
@@ -524,6 +540,18 @@ namespace Microsoft.Azure.BatchExplorer.ViewModels
 
             //Begin a background thread which monitors the status of internal async operations and observes any exceptions
             asyncOperationCompletionMonitoringTask = AsyncOperationTracker.InternalOperationResultHandler();
+        }
+
+        private void CheckIfJobPropertiesExtensionsArePresent(IEnumerable<Lazy<IJobPropertiesExtension, IJobPropertiesExtensionMetadata>> enumerable)
+        {
+            if (enumerable.Any())
+            {
+                ShowExtensions = true;
+            }
+            else
+            {
+                ShowExtensions = false;
+            }
         }
         
         #region Account operations

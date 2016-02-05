@@ -452,5 +452,24 @@ namespace Microsoft.Azure.BatchExplorer.Views
 
             e.CanExecute = simplePropertyModel != null;
         }
+        private void AddItem(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show(this.DataGrid.Items.Count.ToString());
+            if (this.viewModel.ShowExtensions)
+            {
+                foreach (Lazy<IJobPropertiesExtension, IJobPropertiesExtensionMetadata> extension in this.viewModel.JobPropertiesExtensions)
+                {
+                    MenuItem menuItem = new MenuItem();
+                    //extension.Header = "Plugin";
+                    menuItem.Header = extension.Metadata.Name;
+                    menuItem.Command = extension.Value.GetCommandBase();
+                    this.DataGrid.ContextMenu.Items.Add(menuItem);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No extensions found");
+            }
+        }
     }
 }
